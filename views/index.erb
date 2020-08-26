@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Le Tour de France 2020 🚵‍♂️</title>
+    </head>
+    <body>
+        <h1><marquee behavior="scroll" direction="right">Le Tour de France 2020 🚵‍♂️</marquee></h1>
+
+        <%= styled_flash %>
+
+        <style>
+            table, th, td { border: 1px solid black; }
+            td { text-align: center; }
+            table { width: 100%; }
+        </style>
+
+        <h3>Add your pick</h1>
+         <form action='/picks/create' method='post'>
+            <label for="user_token">Token:</label>
+            <input type="password" id="user_token" name="user_token"><br>
+            <label for="stage">Stage:</label>
+            <input type="number" min="1" max="21" id="stage" name="stage"><br>
+            <label for="rider-name">Rider name:</label>
+            <input type="text" id="rider_name" name="rider_name"><br>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <br>
+        <hr>
+        <br>
+
+        <h3>Toggle your pick's visibility</h1>
+         <form action='/picks/toggle' method='post'>
+            <label for="user_token">Token:</label>
+            <input type="password" id="user_token" name="user_token"><br>
+            <label for="stage">Stage:</label>
+            <input type="number" min="1" max="21" id="stage" name="stage"><br>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <br>
+        <hr>
+        <br>
+
+        <table>
+            <tr>
+                <th>Stage #</th>
+                <th>Date</th>
+                <% @users.each do |user| %>
+                    <th><%= user.name %></th>
+                <% end %>
+            </tr>
+
+            <% 1.upto(settings.number_of_stages) do |stage| %>
+                <tr>
+                    <td><%= stage %></td>
+                    <td><%= settings.start_date + stage.days %></td>
+                    <% @users.each do |user| %>
+                        <td><%= @picks&.find { |p| p.stage == stage && p.user_name == user.name } %></td>
+                    <% end %>
+                </tr>
+            <% end %>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+
+development:
+  <<: *default
+  database: 'le-tour-rider-picker-development'
+  username: postgres
+  password:
+  host: 127.0.0.1
+  port: 5432
