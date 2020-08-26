@@ -10,6 +10,7 @@ enable :sessions
 
 set :number_of_stages, 21
 set :start_date, Date.new(2020, 8, 28)
+set :master_token, ENV['MASTER_TOKEN']
 
 get '/' do
   @users = User.order(:name).to_a
@@ -43,21 +44,12 @@ post '/picks/create' do
 end
 
 post '/picks/toggle' do
-  user = User.find_by(token: params[:user_token])
-
-  if user.blank?
+  if params['master_token'] != settings.master_token
     flash[:warning] = 'Invalid token.'
   else
-    pick = user.picks.find_by(stage: params[:stage])
+    Pick.where(stage: params[:stage]).update_all(visible: true)
 
-    if pick.present?
-      pick.visible = !pick.visible
-      pick.save!(touch: false)
-
-      flash[:warning] = 'Pick updated!'
-    else
-      flash[:warning] = 'Pick for given stage does not exist.'
-    end
+    flash[:warning] = 'Picks updated!'
   end
 
   redirect '/', 302
