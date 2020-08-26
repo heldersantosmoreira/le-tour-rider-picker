@@ -51,7 +51,9 @@ post '/picks/toggle' do
     pick = user.picks.find_by(stage: params[:stage])
 
     if pick.present?
-      pick.update(visible: !pick.visible)
+      pick.visible = !pick.visible
+      pick.save!(touch: false)
+
       flash[:warning] = 'Pick updated!'
     else
       flash[:warning] = 'Pick for given stage does not exist.'
