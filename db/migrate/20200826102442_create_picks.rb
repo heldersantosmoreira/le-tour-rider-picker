@@ -4,7 +4,8 @@ class CreatePicks < ActiveRecord::Migration[6.0]
       t.references :user
       t.string :rider_name
       t.integer :stage
-      t.datetime :created_at, default: 'NOW()'
+      t.datetime :created_at, default: -> { 'CURRENT_TIMESTAMP' }
+      t.datetime :updated_at, default: -> { 'CURRENT_TIMESTAMP' }
       t.boolean :visible, default: false
     end
 

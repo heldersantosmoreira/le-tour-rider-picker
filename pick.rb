@@ -14,6 +14,6 @@ class Pick < ActiveRecord::Base
   end
 
   def to_s
-    "#{curated_rider_name} (#{created_at})"
+    "#{curated_rider_name} (#{updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S')})"
   end
 end

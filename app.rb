@@ -22,10 +22,17 @@ post '/picks/create' do
 
   if user.blank?
     flash[:warning] = 'Invalid token.'
-  elsif Pick.exists?(user_id: user.id, stage: params[:stage])
-    flash[:warning] = 'Pick for given stage already exists.'
   else
-    user.picks.create!(stage: params['stage'], rider_name: params['rider_name'])
+    pick = Pick.where(user_id: user.id, stage: params[:stage]).first_or_initialize
+
+    if pick.persisted? && pick.visible?
+      flash[:warning] = 'No can do. Your pick is already visible. Are you trying to cheat?'
+    else
+      pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
+      pick.save!
+
+      flash[:warning] = 'Pick saved!'
+    end
   end
 
   redirect '/', 302

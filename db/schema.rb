@@ -19,7 +19,8 @@ ActiveRecord::Schema.define(version: 2020_08_26_105542) do
     t.bigint "user_id"
     t.string "rider_name"
     t.integer "stage"
-    t.datetime "created_at"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }
     t.boolean "visible", default: false
     t.index ["user_id", "rider_name", "stage"], name: "index_picks_on_user_id_and_rider_name_and_stage", unique: true
     t.index ["user_id"], name: "index_picks_on_user_id"
