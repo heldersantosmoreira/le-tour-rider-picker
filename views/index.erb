@@ -14,14 +14,14 @@
             table { width: 100%; }
         </style>
 
-        <h3>Add your pick</h1>
+        <h3>Add/edit your pick</h1>
          <form action='/picks/create' method='post'>
             <label for="user_token">Token:</label>
-            <input type="password" id="user_token" name="user_token"><br>
+            <input type="password" required="true" id="user_token" name="user_token"><br>
             <label for="stage">Stage:</label>
-            <input type="number" min="1" max="21" id="stage" name="stage"><br>
+            <input type="number" required="true" min="1" max="21" id="stage" name="stage"><br>
             <label for="rider-name">Rider name:</label>
-            <input type="text" id="rider_name" name="rider_name"><br>
+            <input type="text" required="true" id="rider_name" name="rider_name"><br>
 
             <input type="submit" value="Submit">
         </form>
@@ -33,9 +33,9 @@
         <h3>Toggle your pick's visibility</h1>
          <form action='/picks/toggle' method='post'>
             <label for="user_token">Token:</label>
-            <input type="password" id="user_token" name="user_token"><br>
+            <input type="password" required="true" id="user_token" name="user_token"><br>
             <label for="stage">Stage:</label>
-            <input type="number" min="1" max="21" id="stage" name="stage"><br>
+            <input type="number" required="true" min="1" max="21" id="stage" name="stage"><br>
 
             <input type="submit" value="Submit">
         </form>

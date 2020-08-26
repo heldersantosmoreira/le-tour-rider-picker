@@ -29,9 +29,13 @@ post '/picks/create' do
       flash[:warning] = 'No can do. Your pick is already visible. Are you trying to cheat?'
     else
       pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
-      pick.save!
+      pick.save
 
-      flash[:warning] = 'Pick saved!'
+      if pick.persisted?
+        flash[:warning] = 'Pick saved!'
+      else
+        flash[:warning] = "Couldn't save pick!"
+      end
     end
   end
 
