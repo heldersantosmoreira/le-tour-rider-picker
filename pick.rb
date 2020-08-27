@@ -10,7 +10,7 @@ class Pick < ActiveRecord::Base
   def ensure_unlocked_stage
     return unless stage.locked?
 
-    errors.add(:stage, 'cannot be locked')
+    errors.add(:stage, 'is invalid because it is locked')
   end
 
   def user_name
