@@ -5,7 +5,7 @@ class Pick < ActiveRecord::Base
   belongs_to :stage
   belongs_to :rider
 
-  validates_presence_of :user, :stage, :rider
+  validates :rider, :user, :stage,  presence: { message: "is invalid" }
   validate :ensure_unlocked_stage
 
   def ensure_unlocked_stage
