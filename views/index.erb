@@ -41,6 +41,7 @@
             </tr>
 
             <% @stages.each do |stage| %>
+                <% stage_picks = @picks&.select { |p| p.stage == stage } || [] %>
                 <tr>
                     <td><%= stage.number %></td>
                     <td><%= stage.date.strftime('%Y-%m-%d') %></td>
@@ -57,7 +58,7 @@
                         <% end %>
                     </td>
                     <% @users.each do |user| %>
-                        <td><%= @picks&.find { |p| p.stage == stage && p.user_name == user.name } %></td>
+                        <td><%= stage_picks.find { |p| p.stage == stage && p.user_name == user.name } %></td>
                     <% end %>
                 </tr>
             <% end %>
