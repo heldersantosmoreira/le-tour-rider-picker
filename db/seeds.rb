@@ -17,3 +17,15 @@ end
 ].each do |name|
   User.create!(token: SecureRandom.hex(4), name: name)
 end
+
+[
+  'Sam Bennet',
+  'Tadej Pogacar',
+  'Peter Sagan',
+  'Chris Froome',
+  'Egan Bernal',
+  'Primoz Roglic',
+  'Nairo Quintana',
+].each do |name|
+  Rider.create!(name: name)
+end

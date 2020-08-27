@@ -3,9 +3,13 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'sinatra/flash'
+require 'sinatra/json'
+require 'sinatra/reloader'
+require 'sinatra/respond_with'
 require_relative 'pick'
 require_relative 'user'
 require_relative 'stage'
+require_relative 'rider'
 
 enable :sessions
 
@@ -24,7 +28,7 @@ post '/picks/create' do
     flash[:warning] = 'Invalid token.'
   else
     pick = Pick.where(user_id: user.id, stage: Stage.find_by(number: params[:stage_number])).first_or_initialize
-    pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
+    pick.assign_attributes(rider: Rider.find_by(name: params['rider_name']), updated_at: Time.now.utc)
 
     if pick.save
       flash[:warning] = 'Pick created/updated successfully.'
@@ -52,4 +56,11 @@ post '/stage/lock' do
   end
 
   redirect '/', 302
+end
+
+get '/rider' do
+  @riders = Rider.limit(10)
+  @riders = @riders.where('name ILIKE ?', "%#{params[:search]}%") if params[:search]
+
+  json @riders
 end

@@ -3,8 +3,9 @@
 class Pick < ActiveRecord::Base
   belongs_to :user
   belongs_to :stage
+  belongs_to :rider
 
-  validates_presence_of :user, :stage, :rider_name
+  validates_presence_of :user, :stage, :rider
   validate :ensure_unlocked_stage
 
   def ensure_unlocked_stage
@@ -18,7 +19,7 @@ class Pick < ActiveRecord::Base
   end
 
   def curated_rider_name
-    stage.locked? ? rider_name.chomp : '*' * 5
+    stage.locked? ? rider.name.chomp : '*' * 5
   end
 
   def to_s

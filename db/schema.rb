@@ -10,20 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_26_180642) do
+ActiveRecord::Schema.define(version: 2020_08_27_134622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "picks", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "rider_name"
+    t.integer "rider_id"
     t.bigint "stage_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["stage_id"], name: "index_picks_on_stage_id"
-    t.index ["user_id", "rider_name", "stage_id"], name: "index_picks_on_user_id_and_rider_name_and_stage_id", unique: true
+    t.index ["user_id", "rider_id", "stage_id"], name: "index_picks_on_user_id_and_rider_id_and_stage_id", unique: true
     t.index ["user_id"], name: "index_picks_on_user_id"
+  end
+
+  create_table "riders", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "index_riders_on_name", unique: true
   end
 
   create_table "stages", force: :cascade do |t|
@@ -40,4 +45,5 @@ ActiveRecord::Schema.define(version: 2020_08_26_180642) do
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
+  add_foreign_key "picks", "riders"
 end
