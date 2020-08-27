@@ -5,16 +5,18 @@ require 'sinatra/activerecord'
 require 'sinatra/flash'
 require_relative 'pick'
 require_relative 'user'
+require_relative 'stage'
 
 enable :sessions
 
 set :number_of_stages, 21
 set :start_date, Date.new(2020, 8, 28)
-set :master_token, ENV['MASTER_TOKEN']
+set :master_token, 'admin'
 
 get '/' do
-  @users = User.order(:name).to_a
+  @users = User.order(:name)
   @picks = Pick.all.to_a
+  @stages = Stage.all.order(:created_at)
   erb :index
 end
 
@@ -24,32 +26,32 @@ post '/picks/create' do
   if user.blank?
     flash[:warning] = 'Invalid token.'
   else
-    pick = Pick.where(user_id: user.id, stage: params[:stage]).first_or_initialize
+    pick = Pick.where(user_id: user.id, stage: Stage.find_by(number: params[:stage_number])).first_or_initialize
+    pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
 
-    if pick.persisted? && pick.visible?
-      flash[:warning] = 'No can do. Your pick is already visible. Are you trying to cheat?'
+    if pick.invalid?
+      flash[:warning] = pick.errors.full_messages
     else
-      pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
-      pick.save
-
-      if pick.persisted?
-        flash[:warning] = 'Pick saved!'
-      else
-        flash[:warning] = "Couldn't save pick!"
-      end
+      pick.save!
     end
   end
 
   redirect '/', 302
 end
 
-post '/picks/toggle' do
-  if params['master_token'] != settings.master_token
-    flash[:warning] = 'Invalid token.'
-  else
-    Pick.where(stage: params[:stage]).update_all(visible: true)
+post '/stage/lock' do
+  stage = Stage.find_by(number: params['stage_number'])
 
-    flash[:warning] = 'Picks updated!'
+  if stage.present?
+    if stage.locked?
+      flash[:warning] = 'Stage is already locked!'
+    else
+      stage.update(locked_at: Time.now.utc)
+
+      flash[:warning] = 'Stage updated!'
+    end
+  else
+    flash[:warning] =  "Couldn't find stage with given number!"
   end
 
   redirect '/', 302

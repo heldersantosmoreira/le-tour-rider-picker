@@ -2,15 +2,23 @@
 
 class Pick < ActiveRecord::Base
   belongs_to :user
+  belongs_to :stage
 
   validates_presence_of :user, :stage, :rider_name
+  validate :ensure_unlocked_stage
+
+  def ensure_unlocked_stage
+    return unless stage.locked?
+
+    errors.add(:stage, 'cannot be locked')
+  end
 
   def user_name
     user.name
   end
 
   def curated_rider_name
-    visible ? rider_name.chomp : '*' * 5
+    stage.locked? ? rider_name.chomp : '*' * 5
   end
 
   def to_s

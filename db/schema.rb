@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_26_105542) do
+ActiveRecord::Schema.define(version: 2020_08_26_180642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,18 +18,25 @@ ActiveRecord::Schema.define(version: 2020_08_26_105542) do
   create_table "picks", force: :cascade do |t|
     t.bigint "user_id"
     t.string "rider_name"
-    t.integer "stage"
+    t.bigint "stage_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }
-    t.boolean "visible", default: false
-    t.index ["user_id", "rider_name", "stage"], name: "index_picks_on_user_id_and_rider_name_and_stage", unique: true
+    t.index ["stage_id"], name: "index_picks_on_stage_id"
+    t.index ["user_id", "rider_name", "stage_id"], name: "index_picks_on_user_id_and_rider_name_and_stage_id", unique: true
     t.index ["user_id"], name: "index_picks_on_user_id"
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.string "number"
+    t.datetime "date"
+    t.string "locked_at"
+    t.datetime "created_at"
+    t.index ["number"], name: "index_stages_on_number", unique: true
   end
 
   create_table "users", force: :cascade do |t|
     t.string "token"
     t.string "name"
-    t.datetime "created_at"
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 

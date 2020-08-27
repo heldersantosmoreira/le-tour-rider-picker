@@ -18,24 +18,10 @@
          <form action='/picks/create' method='post'>
             <label for="user_token">Token:</label>
             <input type="password" required="true" id="user_token" name="user_token"><br>
-            <label for="stage">Stage:</label>
-            <input type="number" required="true" min="1" max="21" id="stage" name="stage"><br>
-            <label for="rider-name">Rider name:</label>
+            <label for="stage_number">Stage:</label>
+            <input type="number" required="true" min="1" max="21" id="stage_number" name="stage_number"><br>
+            <label for="rider_name">Rider name:</label>
             <input type="text" required="true" id="rider_name" name="rider_name"><br>
-
-            <input type="submit" value="Submit">
-        </form>
-
-        <br>
-        <hr>
-        <br>
-
-        <h3>Toggle a stage pick's visibility</h1>
-         <form action='/picks/toggle' method='post'>
-            <label for="master_token">Master token:</label>
-            <input type="password" required="true" id="master_token" name="master_token"><br>
-            <label for="stage">Stage:</label>
-            <input type="number" required="true" min="1" max="21" id="stage" name="stage"><br>
 
             <input type="submit" value="Submit">
         </form>
@@ -48,15 +34,28 @@
             <tr>
                 <th>Stage #</th>
                 <th>Date</th>
+                <th>Locked at?</th>
                 <% @users.each do |user| %>
                     <th><%= user.name %></th>
                 <% end %>
             </tr>
 
-            <% 1.upto(settings.number_of_stages) do |stage| %>
+            <% @stages.each do |stage| %>
                 <tr>
-                    <td><%= stage %></td>
-                    <td><%= settings.start_date + stage.days %></td>
+                    <td><%= stage.number %></td>
+                    <td><%= stage.date.strftime('%Y-%m-%d') %></td>
+                    <td>
+                        <% if stage.locked? %>
+                            <%= stage.locked_at.to_time.localtime('+01:00') %>
+                        <% else %>
+                            <form action='/stage/lock' method='post'>
+                                <input type="hidden" required="true" min="1" max="21"
+                                       id="stage_number" name="stage_number" value=<%= stage.number %>
+                                >
+                                <input type="submit" value="Lock">
+                            </form>
+                        <% end %>
+                    </td>
                     <% @users.each do |user| %>
                         <td><%= @picks&.find { |p| p.stage == stage && p.user_name == user.name } %></td>
                     <% end %>
