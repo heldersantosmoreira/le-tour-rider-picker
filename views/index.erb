@@ -47,7 +47,7 @@
                     <td><%= stage.date.strftime('%Y-%m-%d') %></td>
                     <td>
                         <% if stage.locked? %>
-                            <%= stage.locked_at.to_time.localtime('+01:00') %>
+                            <%= stage.locked_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %>
                         <% else %>
                             <form action='/stage/lock' method='post'>
                                 <input type="hidden" required="true" min="1" max="21"
