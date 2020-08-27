@@ -6,10 +6,10 @@ require 'sinatra/flash'
 require 'sinatra/json'
 require 'sinatra/reloader'
 require 'sinatra/respond_with'
-require_relative 'pick'
-require_relative 'user'
-require_relative 'stage'
-require_relative 'rider'
+require_relative 'models/pick'
+require_relative 'models/user'
+require_relative 'models/stage'
+require_relative 'models/rider'
 
 enable :sessions
 
