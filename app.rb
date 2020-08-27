@@ -26,10 +26,10 @@ post '/picks/create' do
     pick = Pick.where(user_id: user.id, stage: Stage.find_by(number: params[:stage_number])).first_or_initialize
     pick.assign_attributes(rider_name: params['rider_name'], updated_at: Time.now.utc)
 
-    if pick.invalid?
-      flash[:warning] = pick.errors.full_messages
+    if pick.save
+      flash[:warning] = 'Pick created/updated successfully.'
     else
-      pick.save!
+      flash[:warning] = pick.errors.full_messages
     end
   end
 
