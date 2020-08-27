@@ -9,10 +9,6 @@ require_relative 'stage'
 
 enable :sessions
 
-set :number_of_stages, 21
-set :start_date, Date.new(2020, 8, 28)
-set :master_token, 'admin'
-
 get '/' do
   @users = User.order(:name)
   @picks = Pick.all.to_a
