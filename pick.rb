@@ -8,7 +8,7 @@ class Pick < ActiveRecord::Base
   validate :ensure_unlocked_stage
 
   def ensure_unlocked_stage
-    return unless stage.locked?
+    return unless stage&.locked?
 
     errors.add(:stage, 'is invalid because it is locked')
   end
