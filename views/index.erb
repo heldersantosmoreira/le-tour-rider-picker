@@ -23,7 +23,7 @@
             <label for="rider_name">Rider name:</label>
             <input type="text" required="true" id="rider_name" name="rider_name"><br>
 
-            <input type="submit" value="Submit">
+            <button type="submit">Submit</button>
         </form>
 
         <br>
@@ -52,7 +52,7 @@
                                 <input type="hidden" required="true" min="1" max="21"
                                        id="stage_number" name="stage_number" value=<%= stage.number %>
                                 >
-                                <input type="submit" value="Lock">
+                                <button type="submit" onclick="return confirm('Are you sure you want to lock this stage? This cannot be undone.')">Lock</button>
                             </form>
                         <% end %>
                     </td>
