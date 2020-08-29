@@ -30,7 +30,7 @@ get '/' do
   erb :index
 end
 
-post '/picks/create' do
+post '/picks' do
   user = User.find_by(token: params[:user_token])
 
   if user.blank?
