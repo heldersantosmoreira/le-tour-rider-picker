@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_27_134622) do
+ActiveRecord::Schema.define(version: 2020_08_29_162117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2020_08_27_134622) do
     t.bigint "stage_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.integer "score"
     t.index ["stage_id"], name: "index_picks_on_stage_id"
     t.index ["user_id", "rider_id", "stage_id"], name: "index_picks_on_user_id_and_rider_id_and_stage_id", unique: true
     t.index ["user_id"], name: "index_picks_on_user_id"
