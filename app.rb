@@ -27,6 +27,12 @@ get '/' do
                      .sort_by { |k, _| -k }
                      .take(5)
 
+  @leaderboard = Pick.eager_load(:user)
+                     .where('score IS NOT NULL')
+                     .group('users.name')
+                     .sum('score')
+                     .sort_by { |_, v| v }
+
   erb :index
 end
 

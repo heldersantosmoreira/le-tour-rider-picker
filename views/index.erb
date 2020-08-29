@@ -45,6 +45,17 @@
         <hr>
         <br>
 
+        <h3>Leaderboard</h3>
+         <ol>
+            <% @leaderboard.each do |n| %>
+                <li><%= n.first %> (<%= n.last %>)</li>
+            <% end %>
+        </ol>
+
+        <br>
+        <hr>
+        <br>
+
         <table>
             <tr>
                 <th>Stage #</th>
