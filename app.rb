@@ -15,7 +15,7 @@ enable :sessions
 
 get '/' do
   @users = User.order(:name)
-  @picks = Pick.all.eager_load(:stage, :user).to_a
+  @picks = Pick.all.eager_load(:stage, :user, :rider).to_a
   @stages = Stage.all.order(:created_at)
 
   @most_picked = Pick.eager_load(:rider, :stage)
