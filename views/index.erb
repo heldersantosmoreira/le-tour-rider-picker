@@ -18,7 +18,7 @@
             table { width: 100%; }
         </style>
 
-        <h3>Add/edit your pick</h1>
+        <h3>Add/edit your pick</h3>
          <form action='/picks/create' method='post'>
             <label for="user_token">Token:</label>
             <input type="password" required="true" id="user_token" name="user_token"><br>
@@ -29,6 +29,17 @@
 
             <button type="submit">Submit</button>
         </form>
+
+        <br>
+        <hr>
+        <br>
+
+        <h3>Top 5 most picked riders</h3>
+         <ul>
+            <% @most_picked.each do |n| %>
+                <li><%= n.first %> => <%= n.last.join(', ') %></li>
+            <% end %>
+        </ul>
 
         <br>
         <hr>

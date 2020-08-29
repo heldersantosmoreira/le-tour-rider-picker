@@ -18,6 +18,15 @@ get '/' do
   @picks = Pick.all.eager_load(:stage, :user).to_a
   @stages = Stage.all.order(:created_at)
 
+  @most_picked = Pick.eager_load(:rider, :stage)
+                     .where('stages.locked_at IS NOT NULL')
+                     .group('riders.name')
+                     .count
+                     .group_by { |_, v| v }
+                     .transform_values { |v| v.map(&:first) }
+                     .sort_by { |k, _| -k }
+                     .take(5)
+
   erb :index
 end
 
