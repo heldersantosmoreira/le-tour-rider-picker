@@ -61,7 +61,7 @@ post '/stage/lock' do
       flash[:warning] = 'Stage updated!'
     end
   else
-    flash[:warning] =  "Couldn't find stage with given number!"
+    flash[:warning] = "Couldn't find stage with given number!"
   end
 
   redirect '/', 302
@@ -72,4 +72,16 @@ get '/rider' do
   @riders = @riders.where('name ILIKE ?', "%#{params[:search]}%") if params[:search]
 
   json @riders
+end
+
+post '/picks/scores' do
+  scores = (params['picks'] || {}).select { |_, v| v.present? }
+
+  scores.each do |pick_id, score|
+    Pick.where(id: pick_id).update_all(score: score.to_i)
+  end
+
+  flash[:warning] = 'Scores updated.'
+
+  redirect '/', 302
 end
