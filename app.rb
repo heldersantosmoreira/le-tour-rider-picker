@@ -31,8 +31,8 @@ get '/' do
   @leaderboard = Pick.eager_load(:user)
                      .where('score IS NOT NULL')
                      .group('users.name')
-                     .sum('score')
-                     .sort_by { |_, v| v }
+                     .order('score_sum, timestamp_sum')
+                     .pluck('users.name, SUM(score) AS score_sum, SUM(cast(extract(epoch from rider_updated_at) as integer)) AS timestamp_sum')
 
   erb :index
 end
