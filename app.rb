@@ -15,8 +15,9 @@ enable :sessions
 
 get '/' do
   @users = User.order(:name)
-  @picks = Pick.all.eager_load(:stage, :user).to_a
+  @picks = Pick.all.eager_load(:stage, :user, :rider).to_a
   @stages = Stage.all.order(:created_at)
+  @number_of_riders = Rider.count
 
   @most_picked = Pick.eager_load(:rider, :stage)
                      .where('stages.locked_at IS NOT NULL')
@@ -27,17 +28,26 @@ get '/' do
                      .sort_by { |k, _| -k }
                      .take(5)
 
+  @leaderboard = Pick.eager_load(:user)
+                     .where('score IS NOT NULL')
+                     .group('users.name')
+                     .sum('score')
+                     .sort_by { |_, v| v }
+
   erb :index
 end
 
-post '/picks/create' do
+post '/picks' do
   user = User.find_by(token: params[:user_token])
 
   if user.blank?
     flash[:warning] = 'Invalid token.'
   else
     pick = Pick.where(user_id: user.id, stage: Stage.find_by(number: params[:stage_number])).first_or_initialize
-    pick.assign_attributes(rider: Rider.find_by(name: params['rider_name']), updated_at: Time.now.utc)
+    pick.assign_attributes(
+      rider: Rider.find_by(name: params['rider_name']),
+      rider_updated_at: Time.now.utc
+    )
 
     if pick.save
       flash[:warning] = 'Pick created/updated successfully.'
@@ -61,7 +71,7 @@ post '/stage/lock' do
       flash[:warning] = 'Stage updated!'
     end
   else
-    flash[:warning] =  "Couldn't find stage with given number!"
+    flash[:warning] = "Couldn't find stage with given number!"
   end
 
   redirect '/', 302
@@ -72,4 +82,16 @@ get '/rider' do
   @riders = @riders.where('name ILIKE ?', "%#{params[:search]}%") if params[:search]
 
   json @riders
+end
+
+post '/picks/scores' do
+  scores = (params['picks'] || {}).select { |_, v| v.present? }
+
+  scores.each do |pick_id, score|
+    Pick.find_by(id: pick_id).update(score: score.to_i)
+  end
+
+  flash[:warning] = 'Scores updated.'
+
+  redirect '/', 302
 end
