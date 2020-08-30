@@ -17,6 +17,7 @@ get '/' do
   @users = User.order(:name)
   @picks = Pick.all.eager_load(:stage, :user, :rider).to_a
   @stages = Stage.all.order(:created_at)
+  @number_of_riders = Rider.count
 
   @most_picked = Pick.eager_load(:rider, :stage)
                      .where('stages.locked_at IS NOT NULL')

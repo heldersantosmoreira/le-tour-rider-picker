@@ -100,7 +100,7 @@
                             <td>
                                 <% if stage.locked? %>
                                     <input form="<%= "form_#{stage.id}" %>"
-                                        type="number" max="180" min="-50" size="4"
+                                        type="number" max="<%= @number_of_riders %>" min="-50" size="4"
                                         name="<%= "picks[#{pick&.id}]" %>"
                                         value="<%= pick&.score %>"
                                     />
