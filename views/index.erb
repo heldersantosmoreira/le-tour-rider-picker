@@ -95,7 +95,7 @@
                         <% if pick.present? %>
                             <td>
                                 <%= pick.curated_rider_name %>
-                                <pre><%= pick.updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %></pre>
+                                <pre><%= pick.rider_updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %></pre>
                             </td>
                             <td>
                                 <% if stage.locked? %>

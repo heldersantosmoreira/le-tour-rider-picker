@@ -44,7 +44,10 @@ post '/picks' do
     flash[:warning] = 'Invalid token.'
   else
     pick = Pick.where(user_id: user.id, stage: Stage.find_by(number: params[:stage_number])).first_or_initialize
-    pick.assign_attributes(rider: Rider.find_by(name: params['rider_name']), updated_at: Time.now.utc)
+    pick.assign_attributes(
+      rider: Rider.find_by(name: params['rider_name']),
+      rider_updated_at: Time.now.utc
+    )
 
     if pick.save
       flash[:warning] = 'Pick created/updated successfully.'
@@ -85,7 +88,7 @@ post '/picks/scores' do
   scores = (params['picks'] || {}).select { |_, v| v.present? }
 
   scores.each do |pick_id, score|
-    Pick.where(id: pick_id).update_all(score: score.to_i)
+    Pick.find_by(id: pick_id).update(score: score.to_i)
   end
 
   flash[:warning] = 'Scores updated.'
