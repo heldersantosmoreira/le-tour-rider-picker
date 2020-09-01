@@ -6,4 +6,8 @@ class Stage < ActiveRecord::Base
   def locked?
     locked_at.present?
   end
+
+  def lockable?
+    !locked? && date < Time.now
+  end
 end

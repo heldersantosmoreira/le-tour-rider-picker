@@ -88,7 +88,7 @@
                     <td>
                         <% if stage.locked? %>
                             <%= stage.locked_at.to_time.localtime('+01:00').strftime('%d-%m %H:%M:%S') %>
-                        <% else %>
+                        <% elsif stage.lockable? %>
                             <form action='/stage/lock' method='post'>
                                 <input type="hidden" required="true" min="1" max="21"
                                        id="stage_number" name="stage_number" value=<%= stage.number %>
