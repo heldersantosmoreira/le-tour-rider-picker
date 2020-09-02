@@ -51,12 +51,12 @@ post '/stage/lock' do
   stage = Stage.find_by(number: params['stage_number'])
 
   if stage.present?
-    if stage.locked?
-      flash[:warning] = 'Stage is already locked!'
-    else
-      stage.update(locked_at: Time.now.utc)
+    stage.locked_at = Time.now.utc
 
+    if stage.save
       flash[:warning] = 'Stage updated!'
+    else
+      flash[:warning] = stage.errors.full_messages
     end
   else
     flash[:warning] = "Couldn't find stage with given number!"
