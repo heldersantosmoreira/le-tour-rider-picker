@@ -10,6 +10,7 @@ require_relative 'models/pick'
 require_relative 'models/user'
 require_relative 'models/stage'
 require_relative 'models/rider'
+require_relative 'services/statistics'
 
 enable :sessions
 
@@ -18,21 +19,8 @@ get '/' do
   @picks = Pick.all.eager_load(:stage, :user, :rider).to_a
   @stages = Stage.all.order(:created_at)
   @number_of_riders = Rider.count
-
-  @most_picked = Pick.eager_load(:rider, :stage)
-                     .where('stages.locked_at IS NOT NULL')
-                     .group('riders.name')
-                     .count
-                     .group_by { |_, v| v }
-                     .transform_values { |v| v.map(&:first) }
-                     .sort_by { |k, _| -k }
-                     .take(5)
-
-  @leaderboard = Pick.eager_load(:user)
-                     .where('score IS NOT NULL')
-                     .group('users.name')
-                     .order('score_sum, timestamp_sum')
-                     .pluck('users.name, SUM(score) AS score_sum, SUM(cast(extract(epoch from rider_updated_at) as integer)) AS timestamp_sum')
+  @most_picked = Statistics.n_most_picked(5)
+  @leaderboard = Statistics.leaderboard
 
   erb :index
 end
