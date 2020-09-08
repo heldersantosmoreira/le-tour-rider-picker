@@ -79,46 +79,54 @@
                 <% end %>
             </tr>
 
-            <% @stages.each do |stage| %>
-                <% stage_picks = @picks&.select { |p| p.stage == stage } || [] %>
-                <tr>
-                    <td><form id="<%= "form_#{stage.id}" %>" method="post" action="/picks/scores"></form><%= stage.number %></td>
-                    <td><%= stage.date.strftime('%Y-%m-%d') %></td>
-                    <td>
-                        <% if stage.locked? %>
-                            <input form="<%= "form_#{stage.id}" %>" type="submit" value="Save scores" /></td>
-                        <% elsif stage.lockable? %>
-                            <form action='/stage/lock' method='post'>
-                                <input type="hidden" required="true" min="1" max="21"
-                                       id="stage_number" name="stage_number" value=<%= stage.number %>
-                                >
-                                <button type="submit" onclick="return confirm('Are you sure you want to lock this stage? This cannot be undone.')">Lock</button>
-                            </form>
-                        <% end %>
-                    </td>
-                    <% @users.each do |user| %>
-                        <% pick = stage_picks.find { |p| p.stage == stage && p.user_name == user.name } %>
+            <% (@stages.first.date.to_datetime..@stages.last.date.to_datetime).each do |day| %>
+                <% stage = @stages.find { |s| s.date == day } %>
 
-                        <% if pick.present? %>
-                            <td>
-                                <%= pick.curated_rider_name %>
-                                <pre><%= pick.rider_updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %></pre>
-                            </td>
-                            <td>
-                                <% if stage.locked? %>
-                                    <input form="<%= "form_#{stage.id}" %>"
-                                        type="number" max="<%= @number_of_riders %>" min="-50" size="4"
-                                        name="<%= "picks[#{pick&.id}]" %>"
-                                        value="<%= pick&.score %>"
-                                    />
-                                <% end %>
-                            </td>
-                        <% else %>
-                            <td></td>
-                            <td></td>
+                <% if stage.present? %>
+                    <% stage_picks = @picks&.select { |p| p.stage == stage } || [] %>
+                    <tr>
+                        <td><form id="<%= "form_#{stage.id}" %>" method="post" action="/picks/scores"></form><%= stage.number %></td>
+                        <td><%= stage.date.strftime('%Y-%m-%d') %></td>
+                        <td>
+                            <% if stage.locked? %>
+                                <input form="<%= "form_#{stage.id}" %>" type="submit" value="Save scores" /></td>
+                            <% elsif stage.lockable? %>
+                                <form action='/stage/lock' method='post'>
+                                    <input type="hidden" required="true" min="1" max="21"
+                                        id="stage_number" name="stage_number" value=<%= stage.number %>
+                                    >
+                                    <button type="submit" onclick="return confirm('Are you sure you want to lock this stage? This cannot be undone.')">Lock</button>
+                                </form>
+                            <% end %>
+                        </td>
+                        <% @users.each do |user| %>
+                            <% pick = stage_picks.find { |p| p.stage == stage && p.user_name == user.name } %>
+
+                            <% if pick.present? %>
+                                <td>
+                                    <%= pick.curated_rider_name %>
+                                    <pre><%= pick.rider_updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %></pre>
+                                </td>
+                                <td>
+                                    <% if stage.locked? %>
+                                        <input form="<%= "form_#{stage.id}" %>"
+                                            type="number" max="<%= @number_of_riders %>" min="-50" size="4"
+                                            name="<%= "picks[#{pick&.id}]" %>"
+                                            value="<%= pick&.score %>"
+                                        />
+                                    <% end %>
+                                </td>
+                            <% else %>
+                                <td></td>
+                                <td></td>
+                            <% end %>
                         <% end %>
-                    <% end %>
-                </tr>
+                    </tr>
+                <% else %>
+                    <tr>
+                        <td colspan="15" bgcolor="grey">Rest day</td>
+                    </tr>
+                <% end %>
             <% end %>
         </table>
     </body>
