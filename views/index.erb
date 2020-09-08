@@ -19,57 +19,67 @@
         <%= styled_flash %>
 
         <style>
-            table, th, td { border: 1px solid black; }
-            td { text-align: center; }
             table { width: 100%; }
+
+            .centered {
+                text-align: center;
+            }
+
+            .bordered > * > tr > * {
+                border: 1px solid black;
+            }
+
+            .borderless {
+                border: none;
+            }
         </style>
 
-        <h3>Add/edit your pick</h3>
-         <form action='/picks' method='post'>
-            <label for="user_token">Token:</label>
-            <input type="password" required="true" id="user_token" name="user_token"><br>
-            <label for="stage_number">Stage:</label>
-            <input type="number" required="true" min="1" max="21" id="stage_number" name="stage_number"><br>
-            <label for="rider_name">Rider name:</label>
-            <input type="text" required="true" id="rider_name" name="rider_name"><br>
+        <table cellspacing="0" cellpadding="0" class="borderless">
+            <tr>
+                <td>
+                    <h3>Add/edit your pick</h3>
+                    <form action='/picks' method='post'>
+                        <label for="user_token">Token:</label>
+                        <input type="password" required="true" id="user_token" name="user_token"><br>
+                        <label for="stage_number">Stage:</label>
+                        <input type="number" required="true" min="1" max="21" id="stage_number" name="stage_number"><br>
+                        <label for="rider_name">Rider name:</label>
+                        <input type="text" required="true" id="rider_name" name="rider_name"><br>
 
-            <button type="submit">Submit</button>
-        </form>
+                        <button type="submit">Submit</button>
+                    </form>
+                </td>
+                <td>
+                    <h3>Leaderboard</h3>
+                    <small>
+                        Criteria:
+                        <ol>
+                            <li>Sum of scores</li>
+                            <li>Sum of pick timestamps</li>
+                        </ol>
+                    </small>
+                    <ol>
+                        <% @leaderboard.each do |n| %>
+                            <li><%= n[0] %> (<%= n[1] %>)</li>
+                        <% end %>
+                    </ol>
+                </td>
+                <td>
+                    <h3>Top 5 most picked riders</h3>
+                    <ul>
+                        <% @most_picked.each do |n| %>
+                            <li><%= n.first %> => <%= n.last.join(', ') %></li>
+                        <% end %>
+                    </ul>
+                </td>
+            </tr>
+        </table>
 
         <br>
         <hr>
         <br>
 
-        <h3>Top 5 most picked riders</h3>
-         <ul>
-            <% @most_picked.each do |n| %>
-                <li><%= n.first %> => <%= n.last.join(', ') %></li>
-            <% end %>
-        </ul>
-
-        <br>
-        <hr>
-        <br>
-
-        <h3>Leaderboard</h3>
-        <small>
-            Criteria:
-            <ol>
-                <li>Sum of scores</li>
-                <li>Sum of pick timestamps</li>
-            </ol>
-        </small>
-         <ol>
-            <% @leaderboard.each do |n| %>
-                <li><%= n[0] %> (<%= n[1] %>)</li>
-            <% end %>
-        </ol>
-
-        <br>
-        <hr>
-        <br>
-
-        <table>
+        <table class="bordered centered">
             <tr>
                 <th>Stage #</th>
                 <th>Date</th>
