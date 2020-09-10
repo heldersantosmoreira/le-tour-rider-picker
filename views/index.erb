@@ -32,6 +32,10 @@
             .borderless {
                 border: none;
             }
+
+            .rider-name {
+                padding-top: 10px;
+            }
         </style>
 
         <table cellspacing="0" cellpadding="0" class="borderless">
@@ -114,7 +118,7 @@
 
                             <% if pick.present? %>
                                 <td>
-                                    <%= pick.curated_rider_name %>
+                                    <div class="rider-name"><%= pick.curated_rider_name %></div>
                                     <pre><%= pick.rider_updated_at.to_time.localtime('+01:00').strftime('%Y-%m-%d %H:%M:%S') %></pre>
                                 </td>
                                 <td>
